@@ -69,6 +69,10 @@ env:
   PUBLISH_UPDATE_METADATA: "${{ inputs.publish-update-metadata }}"
   SIGN_BASE_URL: "${{ secrets.SIGN_BASE_URL }}-2"
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   validate-update-metadata-keys:
     runs-on: ubuntu-22.04
@@ -460,6 +464,11 @@ jobs:
           mkdir -p ./SignOutput
           mv ./target/release/rustdesk-portable-packer.exe ./SignOutput/rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.exe
 
+      - name: dr-remoto exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: drsofting-windows-${{ matrix.job.arch }}
+          path: ./SignOutput/*.exe
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2
         with:
